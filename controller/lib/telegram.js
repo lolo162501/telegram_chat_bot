@@ -1,7 +1,7 @@
 import { getAxiosInstance } from "./axios.js";
 import { printBinancePrice, getBinancePrice } from "../../api/binance.js";
 import { printMaxPrice, getMaxPrice } from "../../api/max.js";
-import { sendLLM } from "../../api/llama.js";
+import { sendLLM } from "../../api/llm.js";
 const binanceTargets = [];
 const maxTargets = [];
 let binanceTimer;

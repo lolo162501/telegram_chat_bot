@@ -1,54 +1,54 @@
-# telegram 實現 LLM 對話 , 以及 binance 和 max 平台 查詢幣價
+# Telegram Chat Bot Deployment
 
-## 安裝 ollama
+這個項目是一個 Telegram Chat Bot，可以實現 LLM 對話，並且可以在 Binance 和 Max 平台查詢幣價。這份文件將指導你如何透過 Docker 部署到 Google Cloud Run。
 
-### macOS
+## 建立 Docker 鏡像
 
-[Download](https://ollama.com/download/Ollama-darwin.zip)
+首先，你需要在你的項目根目錄下建立一個 `Dockerfile`。以下是一個基本的 `Dockerfile` 範例：
 
-### Windows
+```Dockerfile
+FROM node:20
 
-[Download](https://ollama.com/download/OllamaSetup.exe)
+WORKDIR /usr/src/app
 
-### Linux
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 8080
+
+CMD [ "node", "server.js" ]
 
 ```
-curl -fsSL https://ollama.com/install.sh | sh
-```
 
-## 下載 model 
+可以使用以下命令來建立你的 Docker 鏡像：
 
 ```sh
-ollama run gemma
+docker build -t gcr.io/PROJECT_ID/telegram_chat_bot .
 ```
 
-## 向 chatfather 申請一個 chatbot 並按照步驟拿到 TOKEN
+請記住將 `PROJECT_ID` 替換為你的 Google Cloud 項目 ID。
 
-![chatfather](./static/chatfather.png)
+## 推送 Docker 鏡像到 Google Artifact Registry
 
-## 啟動服務
+接下來，你需要將你的 Docker 鏡像推送到 Google Artifact Registry：
 
 ```sh
-npm install
-node server.js
+docker push gcr.io/PROJECT_ID/telegram_chat_bot
 ```
 
-## 使用Ngork (代理外網)
+請記住將 `PROJECT_ID` 替換為你的 Google Cloud 項目 ID。
+
+## 部署到 Google Cloud Run
+
+最後，你可以部署你的服務到 Google Cloud Run：
 
 ```sh
-./ngork http 4040
+gcloud run deploy telegram-chat-bot --image gcr.io/PROJECT_ID/telegram_chat_bot --region asia-northeast1
 ```
 
-![ngork](./static/ngrok.png)
+請記住將 `PROJECT_ID` 替換為你的 Google Cloud 項目 ID。
 
-
-## 設定Telegram Webhook
-
-```sh
-curl https://api.telegram.org/bot{$token}/setWebhook?url={$ngrok_url}
-```
-![webhook](./static/webhook.png)
-
-## 完成~
-
-![bot](./static/demo.png)
+現在，你的 Telegram Chat Bot 已經部署到 Google Cloud Run，並可以接收來自 Telegram 的訊息。

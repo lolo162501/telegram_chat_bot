@@ -1,7 +1,8 @@
+import { config } from 'dotenv';
 import axios from "axios";
+config();
 
-const TOKEN = "YOUR_TELEGRAM_BOT_TOKEN";
-const BASE_URL = `https://api.telegram.org/bot${TOKEN}`;
+const BASE_URL = `https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}`;
 export function getAxiosInstance() {
     return {
         get(method, params) {
